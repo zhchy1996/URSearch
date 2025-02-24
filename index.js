@@ -6,10 +6,11 @@ const path = require('path');
 let previousData = null;
 
 // 设置定时任务，每5分钟执行一次
-// cron.schedule('*/5 * * * *', async () => {
-//   console.log('执行定时任务:', new Date().toLocaleString());
-//   await fetchDataAndCompare();
-// });
+cron.schedule('*/5 * * * *', async () => {
+  // console.log('执行定时任务:', new Date().toLocaleString());
+  // await fetchDataAndCompare();
+  await init();
+});
 
 async function fetchMapData() {
   try {
@@ -91,10 +92,12 @@ const genMsg = async (roomList) => {
   return msg;
 }
 
-(async () => {
+const init = async () => {
   const data = await fetchMapData();
   const oldData = await getData();
   const newList = compareData(data, oldData);
   const msg = await genMsg(newList);
   sendNotices(msg)
-})();
+}
+// (async () => {
+// })();
