@@ -35,7 +35,7 @@ async function fetchMapData() {
 }
 
 const saveData = async (data) => {
-  await fs.writeFileSync(path.resolve(__dirname, './old_data.json'), data);
+  await fs.writeFileSync(path.resolve(__dirname, './old_data.json'), JSON.stringify(data));
 }
 
 const getData = async () => {
@@ -77,6 +77,7 @@ const getRoomData = async id => {
 const sendNotices = async (msg) => {
   const sendMsg = encodeURIComponent(msg)
   await axios.get(`https://api.day.app/a9aHvq5BMiZiFan4YFCpxB/${sendMsg}`)
+  await axios.get(`https://api.day.app/paFKWJxvxNpKJixVZWdctS/${sendMsg}`)
 }
 
 const genMsg = async (roomList) => {
@@ -97,7 +98,8 @@ const init = async () => {
   const oldData = await getData();
   const newList = compareData(data, oldData);
   const msg = await genMsg(newList);
-  sendNotices(msg)
+  if (msg) sendNotices(msg);
+  await saveData(data);
 }
 // (async () => {
 // })();
