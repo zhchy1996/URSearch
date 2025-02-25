@@ -15,10 +15,10 @@ cron.schedule('*/5 * * * *', async () => {
 async function fetchMapData() {
   try {
     const params = new URLSearchParams({
-      ne_lat: '34.75547747631003',
-      ne_lng: '135.6973821495385',
-      sw_lat: '34.586909281015494',
-      sw_lng: '135.35508936389397',
+      ne_lat: '34.759017105554726',
+      ne_lng: '135.68536585315178',
+      sw_lat: '34.59045612106392',
+      sw_lng: '135.34307306750725',
       small: false
     });
     const response = await axios.post(
