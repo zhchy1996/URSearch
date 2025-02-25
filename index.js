@@ -74,10 +74,10 @@ const getRoomData = async id => {
   } 
 }
 
-const sendNotices = async (msg) => {
+const sendNotices = async (msg,title) => {
   const sendMsg = encodeURIComponent(msg)
-  await axios.get(`https://api.day.app/a9aHvq5BMiZiFan4YFCpxB/${sendMsg}`)
-  await axios.get(`https://api.day.app/paFKWJxvxNpKJixVZWdctS/${sendMsg}`)
+  await axios.get(`https://api.day.app/a9aHvq5BMiZiFan4YFCpxB/${title}/${sendMsg}`)
+  await axios.get(`https://api.day.app/paFKWJxvxNpKJixVZWdctS/${title}/${sendMsg}`)
 }
 
 const genMsg = async (roomList) => {
@@ -85,21 +85,23 @@ const genMsg = async (roomList) => {
   for (let i = 0; i < roomList.length; i++) {
       try {
         const roomData = await getRoomData(roomList[i].id)
-        msg += `团地名: ${roomData.name}  位置：${roomData.access}||||`
+        // if (msg) msg += '\n'
+        msg += `团地名: ${roomData.name}\n 位置：${roomData.access.replaceAll('<li>', '').replaceAll('</li>', '\n')}\n`
       } catch(e) {
         console.error(e)
       }
   }
-  return msg;
+  return {msg, title: `有${roomList.length}个新团地`};
 }
 
 const init = async () => {
   const data = await fetchMapData();
   const oldData = await getData();
   const newList = compareData(data, oldData);
-  const msg = await genMsg(newList);
-  if (msg) sendNotices(msg);
+  const {msg, title} = await genMsg(newList);
+  if (msg) sendNotices(msg, title);
   await saveData(data);
 }
 // (async () => {
+//   await init();
 // })();
